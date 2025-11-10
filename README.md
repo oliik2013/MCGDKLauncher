@@ -2,7 +2,7 @@
 
 Minecraft Bedrock GDK Launcher for Linux, powered by WineGDK
 
-## You still need to manually download and unencrypt Minecraft.
+### NOTE: You still need to manually download and unencrypt Minecraft.
 
 You need python3.
 
