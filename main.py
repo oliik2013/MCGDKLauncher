@@ -40,6 +40,7 @@ if mainfolder.exists():
         exit(1)
 else:
     print("First time setup")
+    input("Press Enter to start setup...")
     os.system("mkdir ~/.mcgdklauncher")
     print("Downloading and compiling WineGDK and dependencies...")
     time.sleep(2)
