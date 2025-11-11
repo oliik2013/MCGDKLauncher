@@ -7,12 +7,37 @@ from pathlib import Path
 print("MCGDKLauncher 1.0")
 distro = distro.id()
 print(f"Detected Linux distribution: {distro}")
-
-contentfolder = Path(os.path.expanduser("~/.mcgdklauncher/Minecraft/Content"))
-if contentfolder.exists():
-    print("Alerdy setted up, launching Minecraft...")
-    os.system("bash -c \"VKD3D_CONFIG=dxr11,dxr WINEPREFIX=~/.mcgdklauncher/prefix DXVK_ENABLE_NVAPI=1 ~/.mcgdklauncher/WineGDK/build/wine ~/.mcgdklauncher/Minecraft/Content/Minecraft.Windowss.exe\"")
-    exit(0)
+mainfolder = Path(os.path.expanduser("~/.mcgdklauncher"))
+if mainfolder.exists():
+    print("What you want to do?")
+    print("1. Launch Minecraft GDK")
+    print("2. Update WineGDK")
+    print("3. Exit")
+    choice = input("Enter your choice (1/2/3): ")
+    if choice == "1":
+        contentfolder = Path(os.path.expanduser("~/.mcgdklauncher/Minecraft/Content"))
+        if contentfolder.exists():
+            os.system("bash -c \"VKD3D_CONFIG=dxr11,dxr WINEPREFIX=~/.mcgdklauncher/prefix DXVK_ENABLE_NVAPI=1 ~/.mcgdklauncher/WineGDK/build/wine ~/.mcgdklauncher/Minecraft/Content/Minecraft.Windowss.exe\"")
+            exit(0)
+        else:
+            print("Minecraft game files not found in ~/.mcgdklauncher/Minecraft/Content. Please place them there and try again.")
+            time.sleep(3)
+            exit(1)
+    elif choice == "2":
+        print("Updating WineGDK...")
+        os.system("cd ~/.mcgdklauncher/WineGDK && git fetch && git merge origin/main")
+        os.system("cd ~/.mcgdklauncher/build && make -j$(nproc)")
+        print("WineGDK updated successfully!")
+        time.sleep(2)
+        exit(0)
+    elif choice == "3":
+        print("Exiting...")
+        time.sleep(1)
+        exit(0)
+    else:
+        print("Invalid choice, exiting...")
+        time.sleep(1)
+        exit(1)
 else:
     print("First time setup")
     os.system("mkdir ~/.mcgdklauncher")
@@ -28,10 +53,10 @@ else:
 
     print("Cloning WineGDK repository...")
     os.system("git clone https://github.com/Weather-OS/WineGDK.git ~/.mcgdklauncher/WineGDK")
-    os.system("mkdir ~/.mcgdklauncher/WineGDK/build")
+    os.system("mkdir ~/.mcgdklauncher/build")
     print("Compiling WineGDK (this may take a while)...")
     time.sleep(2)
-    os.system("cd ~/.mcgdklauncher/WineGDK/build && ../configure --enable-win64 && make -j$(nproc)")
+    os.system("cd ~/.mcgdklauncher/build && ../WineGDK/configure --enable-win64 && make -j$(nproc)")
     print("Compiled WineGDK successfully!")
     os.system("mkdir ~/.mcgdklauncher/prefix")
     print("Installing Winetricks dependencies (vkd3d, dxvk, nvapi)...")
